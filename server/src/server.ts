@@ -1,4 +1,4 @@
-import express from 'express';
+import express from 'express'
 
 const app = express();
 
@@ -7,6 +7,7 @@ app.get('/ads', (request, response) => {
     { id: 1, name: 'Anúncio 1' },
     { id: 3, name: 'Anúncio 2' },
     { id: 3, name: 'Anúncio 3' },
+    { id: 3, name: 'Anúncio 4' },
   ]);
 });
 
