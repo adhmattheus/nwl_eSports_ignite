@@ -1,10 +1,30 @@
 import './styles/main.css'
 import logoImg from './assets/Logo.svg'
-import { MagnifyingGlassPlus } from 'phosphor-react'
 import { GammerBanner } from './components/GamerBanner'
 import { CreateAdsBanner } from './components/CreateAdsBanner'
+import { useEffect, useState } from 'react'
+
+interface Game {
+  id: string;
+  title: string;
+  bannerUrl: string;
+  _count: {
+    ads: number;
+  }
+}
 
 function App() {
+  const [games, setGames] = useState<Game[]>([]);
+
+  useEffect(() => {
+    fetch('http://localhost:3333/games')
+      .then(response => response.json())
+      .then(data => {
+        console.log(data)
+        setGames(data)
+      })
+  }, [])
+
 
   return (
     <div className="max-w-[1024px] mx-auto flex flex-col items-center my-10">
