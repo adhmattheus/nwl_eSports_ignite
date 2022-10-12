@@ -1,8 +1,14 @@
-import './styles/main.css'
-import logoImg from './assets/Logo.svg'
-import { GammerBanner } from './components/GamerBanner'
-import { CreateAdsBanner } from './components/CreateAdsBanner'
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from "react";
+import * as Dialog from '@radix-ui/react-dialog';
+import { CreateAdBanner } from "./components/CreateAdBanner";
+import { GameBanner } from "./components/GameBanner";
+
+import './styles/main.css';
+
+import logoImg from './assets/logo-nlw-esports.svg';
+import { CreateAdModal } from "./components/CreateAdModal";
+import axios from "axios";
+
 
 interface Game {
   id: string;
@@ -17,38 +23,39 @@ function App() {
   const [games, setGames] = useState<Game[]>([]);
 
   useEffect(() => {
-    fetch('http://localhost:3333/games')
-      .then(response => response.json())
-      .then(data => {
-        console.log(data)
-        setGames(data)
-      })
-  }, [])
-
+    axios('http://localhost:3333/games').then(response => {
+      setGames(response.data);
+    });
+  }, []);
 
   return (
-    <div className="max-w-[1024px] mx-auto flex flex-col items-center my-10">
+    <div className="max-w-[1344px] mx-auto flex flex-col items-center my-20">
+      <img src={logoImg} alt="" />
 
-      <img src={logoImg} />
-
-      <h1 className='text-6xl text-white font-black mt-15'>
-        Seu <span className='text-transparent bg-nlw-gradient bg-clip-text'>duo</span> está aqui.
+      <h1 className="text-6xl text-white font-black mt-20">
+        Seu <span className="text-transparent bg-nlw-gradient bg-clip-text">duo</span> está aqui.
       </h1>
 
-      <div className='grid grid-cols-6 gap-6 mt-16'>
-
-        <GammerBanner bannerUrl="/game1.png" title='League of Legends' adsCount={5} />
-        <GammerBanner bannerUrl="/game2.png" title='Dota 2 ' adsCount={2} />
-        <GammerBanner bannerUrl="/game3.png" title='CS GO' adsCount={1} />
-        <GammerBanner bannerUrl="/game4.png" title='Apex Legend' adsCount={3} />
-        <GammerBanner bannerUrl="/game5.png" title='Fortinite' adsCount={9} />
-        <GammerBanner bannerUrl="/game6.png" title='World WarCraft' adsCount={3} />
-
+      <div className="grid grid-cols-6 gap-6 mt-16">
+        {games.map(game => {
+          return (
+            <GameBanner
+              key={game.id}
+              title={game.title}
+              bannerUrl={game.bannerUrl}
+              adsCount={game._count.ads}
+            />
+          )
+        })}
       </div>
 
-      <CreateAdsBanner />
+      <Dialog.Root>
+        <CreateAdBanner />
 
+        <CreateAdModal />
+      </Dialog.Root>
     </div>
   )
 }
+
 export default App
